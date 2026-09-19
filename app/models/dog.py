@@ -45,6 +45,36 @@ class BreedImage(ModelBase):
         return self.file.height if self.file else None
 
 
+class DogImage(ModelBase):
+    class StatusEnum(Enum):
+        Valid = 'Valid'
+        Deleted = 'Deleted'
+
+    breed_id = db.Column(db.Integer, db.ForeignKey('breed.id'), nullable=False, index=True)
+    file_id = db.Column(db.Integer, db.ForeignKey('file.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    external_url = db.Column(db.String(1024), nullable=False, default='')
+    title = db.Column(db.String(256), nullable=False, default='')
+
+    status = db.Column(db.Enum(StatusEnum), nullable=False, default=StatusEnum.Valid, index=True)
+
+    file = db.relationship('File', foreign_keys=[file_id])
+
+    @property
+    def static_url(self) -> str:
+        if self.file:
+            return self.file.static_url
+        return self.external_url or ''
+
+    @property
+    def width(self):
+        return self.file.width if self.file else None
+
+    @property
+    def height(self):
+        return self.file.height if self.file else None
+
+
 class Breed(ModelBase):
     class StatusEnum(Enum):
         Valid = 'Valid'
@@ -84,6 +114,16 @@ class Breed(ModelBase):
     height_metric = db.Column(db.String(64), nullable=True, default=None)
 
     status = db.Column(db.Enum(StatusEnum), nullable=False, default=StatusEnum.Valid, index=True)
+
+    dog_images = db.relationship(
+        'DogImage',
+        primaryjoin="and_(DogImage.breed_id == Breed.id, "
+                    "DogImage.status == 'Valid')",
+        foreign_keys='DogImage.breed_id',
+        uselist=True,
+        lazy='dynamic',
+        viewonly=True,
+    )
 
     def _row_to_dict_hook_(self, result: dict):
         result['weight'] = {

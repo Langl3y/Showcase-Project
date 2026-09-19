@@ -26,6 +26,16 @@ class User(ModelBase):
 
     status = db.Column(db.Enum(StatusEnum), nullable=False, default=StatusEnum.Valid, index=True)
 
+    dog_images = db.relationship(
+        'DogImage',
+        primaryjoin="and_(DogImage.user_id == User.id, "
+                    "DogImage.status == 'Valid')",
+        foreign_keys='DogImage.user_id',
+        uselist=True,
+        lazy='dynamic',
+        viewonly=True,
+    )
+
     def check_login_password(self, password: str) -> bool:
         if self.login_password_hash is None:
             return False
