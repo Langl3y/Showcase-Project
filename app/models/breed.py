@@ -74,10 +74,10 @@ class Breed(ModelBase):
     reference_image_id = db.Column(db.String(64), nullable=True, default=None)
     image_id = db.Column(db.Integer, db.ForeignKey('breed_image.id'), nullable=True)
 
-    weight_imperial = db.Column(db.String(32), nullable=True, default=None)
-    weight_metric = db.Column(db.String(32), nullable=True, default=None)
-    height_imperial = db.Column(db.String(32), nullable=True, default=None)
-    height_metric = db.Column(db.String(32), nullable=True, default=None)
+    weight_imperial = db.Column(db.String(64), nullable=True, default=None)
+    weight_metric = db.Column(db.String(64), nullable=True, default=None)
+    height_imperial = db.Column(db.String(64), nullable=True, default=None)
+    height_metric = db.Column(db.String(64), nullable=True, default=None)
 
     status = db.Column(db.Enum(StatusEnum), nullable=False, default=StatusEnum.Valid, index=True)
 
@@ -202,6 +202,7 @@ class Breed(ModelBase):
 
         if auto_commit:
             return db.session_add_and_commit(breed)
+
         db.session.add(breed)
         db.session.flush()
         return breed
