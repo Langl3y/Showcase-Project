@@ -7,5 +7,5 @@ class BreedDoesNotExist(ErrorWithResponseCode):
 
 
 class DogImageDoesNotExist(ErrorWithResponseCode):
-    response_code = 203
+    response_code = 202
     message_template = 'Dog image does not exist'
