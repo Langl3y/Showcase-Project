@@ -73,7 +73,7 @@ class _MinIOBucket:
             return f"{static_base.rstrip('/')}/{key.lstrip('/')}"
         return f'{scheme}://{self._endpoint}/{self._bucket_name}/{key}'
 
-    def put_file(self, key: str, file: IO, length: int = -1,
+    def put_file(self, key: str, file: IO, length: int = 0,
                  content_type: str = 'application/octet-stream') -> bool:
         try:
             self._client.put_object(
@@ -86,7 +86,7 @@ class _MinIOBucket:
 
     def put_file_with_acl(self, key: str, file: IO,
                           acl: Union[str, ACLEnum],
-                          length: int = -1,
+                          length: int = 0,
                           content_type: str = 'application/octet-stream',
                           **kwargs) -> bool:
         if isinstance(acl, self.ACLEnum):

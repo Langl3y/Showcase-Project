@@ -1,4 +1,5 @@
 import imghdr
+import os
 
 from flask import request, g
 from werkzeug.utils import secure_filename
@@ -30,9 +31,14 @@ class ImageUploadResource(Resource):
         mime_type = File.MimeTypeEnum.ImagePng if img_type == 'png' \
             else File.MimeTypeEnum.ImageJpg
 
+        img.seek(0, os.SEEK_END)
+        length = img.tell()
+        img.seek(0)
+
         file_key = new_file_key(suffix=img_type)
         if not AWSBucket.put_file_with_acl(
-                file_key, img, AWSBucket.ACLEnum.PRIVATE):
+                file_key, img, AWSBucket.ACLEnum.PRIVATE,
+                length=length, content_type=f'image/{img_type}'):
             raise ServiceUnavailable
         url = AWSBucket.get_static_file_url(file_key)
 
@@ -43,6 +49,7 @@ class ImageUploadResource(Resource):
         new_file: File = File.new(
             g.user.id, file_key,
             filename,
+            size=length,
             mime_type=mime_type
         )
 
