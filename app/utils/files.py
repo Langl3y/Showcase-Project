@@ -1,6 +1,6 @@
 from enum import Enum
 from re import compile as re_compile
-from typing import IO, Any, Union
+from typing import IO, Union
 
 from minio import Minio
 from minio.error import S3Error
@@ -58,7 +58,7 @@ class _MinIOBucket:
             key,
         )
 
-    def put_private_url(self, key: str) -> dict:
+    def put_private_url(self, key: str) -> str:
         from datetime import timedelta
         return self._client.presigned_put_object(
             self._bucket_name,
@@ -122,3 +122,6 @@ MinioDefaultBucket = _MinIOBucket(
     region_name=_minio_config.get('region_name', 'us-east-1'),
     secure=_minio_config.get('secure', False),
 )
+
+# Substitute for AWS S3
+AWSBucket = MinioDefaultBucket
