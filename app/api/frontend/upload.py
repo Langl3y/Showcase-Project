@@ -1,0 +1,55 @@
+import imghdr
+
+from flask import request, g
+from werkzeug.utils import secure_filename
+from app.api.common import Namespace, Resource
+from ..common.decorators import respond_with_code, require_login
+from ...exceptions import InvalidArgument, ImageFormatError, FileTooBig, ServiceUnavailable, FileNameTooLong
+from ...models import File, db
+from app.utils import AWSBucket, new_file_key
+
+ns = Namespace('Upload')
+
+
+@ns.route('/image')
+@respond_with_code
+class ImageUploadResource(Resource):
+    @classmethod
+    @require_login
+    def post(cls):
+        img = request.files.get('img')
+        if not img:
+            raise InvalidArgument('img')
+
+        if (img_type := imghdr.what(img)) not in {'png', 'jpeg', 'jpg'}:
+            raise ImageFormatError
+
+        if int(request.headers['CONTENT_LENGTH']) > 1024 * 1024 * 10:
+            raise FileTooBig
+
+        mime_type = File.MimeTypeEnum.ImagePng if img_type == 'png' \
+            else File.MimeTypeEnum.ImageJpg
+
+        file_key = new_file_key(suffix=img_type)
+        if not AWSBucket.put_file_with_acl(
+                file_key, img, AWSBucket.ACLEnum.PRIVATE):
+            raise ServiceUnavailable
+        url = AWSBucket.get_static_file_url(file_key)
+
+        filename = secure_filename(img.filename)
+        if len(filename) > 128:
+            raise FileNameTooLong
+
+        new_file: File = File.new(
+            g.user.id, file_key,
+            filename,
+            mime_type=mime_type
+        )
+
+        db.session.add(new_file)
+        db.session.commit()
+
+        return {
+            'file_url': url,
+            'id': new_file.id
+        }
