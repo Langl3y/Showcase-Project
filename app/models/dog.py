@@ -50,6 +50,10 @@ class Breed(ModelBase):
         Valid = 'Valid'
         Deleted = 'Deleted'
 
+    class MeasurementEnum(Enum):
+        Metric = 'Metric'
+        Imperial = 'Imperial'
+
     __table_args__ = (
         db.Index('breed_species_group_idx', 'species_id', 'breed_group'),
         db.Index('breed_country_name_idx', 'country_code', 'name'),
