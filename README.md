@@ -117,7 +117,7 @@ FLUSH PRIVILEGES;
 SQL
 
 # 3. Verify connection
-mysql -uhieu_ho -p'hieu_ho_password_123!' -h 127.0.0.1 hieu_ho_assessment \
+mysql -u hieu_ho -p'hieu_ho_password_123!' -h 127.0.0.1 hieu_ho_assessment \
   -e "SELECT DATABASE();"
 ```
 
@@ -128,7 +128,7 @@ mysql -uhieu_ho -p'hieu_ho_password_123!' -h 127.0.0.1 hieu_ho_assessment \
 python3 manage.py init-data
 
 # verify 3 tables got populated
-mysql -uhieu_ho -p'hieu_ho_password_123!' -h 127.0.0.1 hieu_ho_assessment \
+mysql -u hieu_ho -p'hieu_ho_password_123!' -h 127.0.0.1 hieu_ho_assessment \
   -e "SELECT 'user' AS tbl, COUNT(*) AS n FROM user UNION ALL
       SELECT 'breed', COUNT(*) FROM breed UNION ALL
       SELECT 'species', COUNT(*) FROM species UNION ALL
@@ -145,4 +145,19 @@ curl -s -X POST localhost:5000/frontend/user/login \
   -d '{"email":"user1@example.com","password":"User123!"}'
 
 curl -s localhost:5000/frontend/user/me -H "AUTHORIZATION: <token>"
+```
+
+### Init data
+
+Run the Flask shell
+```bash
+python3 manage.py shell
+```
+
+```python
+from app.business import init_data, init_users, init_breeds
+
+init_users()   # init default users
+init_breeds()  # fetch fresh breed data from the dog api
+init_data()    # run all init functions above
 ```
