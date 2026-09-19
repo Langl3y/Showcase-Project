@@ -1,0 +1,19 @@
+venv/*
+.venv
+.myenv
+__pycache__
+.idea
+.idea/*
+.DS_Store
+.vscode/
+*.py[cod]
+*.swp
+*.out
+tags
+app/log/*
+*.png
+docs/
+
+# Local config
+app/config/testing.py
+app/config/environment.py
