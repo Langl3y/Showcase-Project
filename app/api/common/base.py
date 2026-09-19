@@ -180,9 +180,19 @@ class Namespace(_Namespace):
                     if field.default is mm_fields.missing_:
                         field.default = None
 
+                def swagger_type(_field):
+                    if isinstance(_field, mm_fields.Boolean):
+                        return 'boolean'
+                    if isinstance(_field, mm_fields.Integer):
+                        return 'integer'
+                    if isinstance(_field, mm_fields.Number):
+                        return 'number'
+                    return 'string'
+
                 func = self.doc(params={
                     key: {
                         'in': 'query',
+                        'type': swagger_type(field),
                         'description': field_desc(key, field),
                         'required': field.required
                     } for key, field in fields.items()

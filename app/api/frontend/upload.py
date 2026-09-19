@@ -2,6 +2,8 @@ import imghdr
 import os
 
 from flask import g, request
+from flask_restx import reqparse
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from app.api.common import Namespace, Resource
@@ -19,12 +21,17 @@ from ..common.decorators import require_login, respond_with_code
 
 ns = Namespace('Upload')
 
+image_parser = reqparse.RequestParser()
+image_parser.add_argument('img', type=FileStorage, location='files',
+                          required=True, help='png/jpg image, max 10MB')
+
 
 @ns.route('/image')
 @respond_with_code
 class ImageUploadResource(Resource):
     @classmethod
     @require_login
+    @ns.expect(image_parser)
     def post(cls):
         img = request.files.get('img')
         if not img:
