@@ -147,6 +147,25 @@ curl -s -X POST localhost:5000/frontend/user/login \
 curl -s localhost:5000/frontend/user/me -H "AUTHORIZATION: <token>"
 ```
 
+### Database migrations
+
+```bash
+# Apply outstanding migrations
+python3 manage.py db upgrade
+
+# Migrate new updates from model -> DB
+python3 manage.py db migrate -m "what changed"
+python3 manage.py db upgrade
+
+# Get metadata
+python3 manage.py db current     # Get current revision
+python3 manage.py db history     # Get all revisions
+python3 manage.py db downgrade   # Downgrade from current revision
+```
+
+A database created before migrations existed already has the tables, so mark it
+as up to date once instead of upgrading: `python3 manage.py db stamp head`.
+
 ### Init data
 
 Run the Flask shell
