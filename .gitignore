@@ -17,3 +17,7 @@ docs/
 # Local config
 app/config/testing.py
 app/config/environment.py
+
+# Local databases
+*.db
+*.sqlite3

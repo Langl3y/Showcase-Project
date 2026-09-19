@@ -19,3 +19,4 @@ requests==2.32.3
 sqlalchemy==2.0.36
 webargs==8.6.0
 werkzeug==3.0.3
+pytest==8.3.3
