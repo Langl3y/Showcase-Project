@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Dict, Any
+import os
 from .common import ConfigDict
 
 
@@ -33,5 +34,6 @@ def _load_py_file(filename: str, *, optional: bool = False):
 
 
 _load_py_file('default.py')
-_load_py_file('testing.py', optional=True)
+if os.environ.get('TESTING') == '1' or os.environ.get('PYTEST_CURRENT_TEST'):
+    _load_py_file('testing.py', optional=True)
 _load_py_file('environment.py', optional=True)

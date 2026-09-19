@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+os.environ['TESTING'] = '1'
+
 import pytest
 
 
