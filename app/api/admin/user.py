@@ -36,10 +36,11 @@ class AdminUserListResource(Resource):
 
         return {
             "items": items,
+            "page": pagination.page,
+            "limit": pagination.per_page,
             "total": pagination.total,
-            "page": page,
-            "limit": limit,
             "pages": pagination.pages,
+            "has_next": pagination.has_next,
         }
 
 
