@@ -17,6 +17,54 @@ tags:
 - name: User
 - name: AdminUser
 paths:
+  /admin/user/users:
+    get:
+      operationId: get_admin_user_list_resource
+      tags:
+      - AdminUser
+      parameters:
+      - in: query
+        description: Page number, starting from 1, default=1
+        required: false
+        name: page
+        schema:
+          type: integer
+      - in: query
+        description: Items per page, default=20
+        required: false
+        name: limit
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+  /admin/user/users/{user_id}:
+    get:
+      operationId: get_admin_user_detail_resource
+      tags:
+      - AdminUser
+      responses:
+        '200':
+          description: Success
+    put:
+      operationId: put_admin_user_detail_resource
+      tags:
+      - AdminUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserAdminUserDetailPutRequest'
+      responses:
+        '200':
+          description: Success
+    parameters:
+    - name: user_id
+      in: path
+      required: true
+      schema:
+        type: integer
   /frontend/dog/breed:
     get:
       operationId: get_list_breed
@@ -213,56 +261,16 @@ paths:
       responses:
         '200':
           description: Success
-  /admin/user/users:
-    get:
-      operationId: get_admin_user_list_resource
-      tags:
-      - AdminUser
-      parameters:
-      - in: query
-        description: Page number, starting from 1, default=1
-        required: false
-        name: page
-        schema:
-          type: integer
-      - in: query
-        description: Items per page, default=20
-        required: false
-        name: limit
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: Success
-  /admin/user/users/{user_id}:
-    get:
-      operationId: get_admin_user_detail_resource
-      tags:
-      - AdminUser
-      responses:
-        '200':
-          description: Success
-    put:
-      operationId: put_admin_user_detail_resource
-      tags:
-      - AdminUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AdminUserAdminUserDetailPutRequest'
-      responses:
-        '200':
-          description: Success
-    parameters:
-    - name: user_id
-      in: path
-      required: true
-      schema:
-        type: integer
 components:
   schemas:
+    AdminUserAdminUserDetailPutRequest:
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          example: Frozen
+      type: object
     DogBreedImageAssociatePostRequest:
       required:
       - breed_id
@@ -286,6 +294,18 @@ components:
           type: string
           example: ''
       type: object
+    UserLoginPostRequest:
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: StrongPass123!
+      type: object
     UserRegisterPostRequest:
       required:
       - email
@@ -300,26 +320,6 @@ components:
         username:
           type: string
           example: john_doe
-      type: object
-    UserLoginPostRequest:
-      required:
-      - email
-      - password
-      properties:
-        email:
-          type: string
-          example: user@example.com
-        password:
-          type: string
-          example: StrongPass123!
-      type: object
-    AdminUserAdminUserDetailPutRequest:
-      required:
-      - status
-      properties:
-        status:
-          type: string
-          example: Frozen
       type: object
   securitySchemes:
     Authorization:

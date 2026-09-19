@@ -122,7 +122,11 @@ def convert(swagger: dict, base_path: str) -> tuple[dict, dict, dict]:
                 converted[key] = value
         if shared:
             converted['parameters'] = shared
-        paths[f"{base_path.rstrip('/')}{path}"] = converted
+        # flask-restx yields methods in registration order, which is not stable
+        # between runs; sort so the generated file is reproducible
+        ordered = {k: converted[k] for k in methods if k in converted}
+        ordered.update({k: v for k, v in converted.items() if k not in methods})
+        paths[f"{base_path.rstrip('/')}{path}"] = ordered
 
     schemes = {}
     for name, defn in (swagger.get('securityDefinitions') or {}).items():
@@ -168,8 +172,9 @@ def build(app) -> dict:
                  'description': SPEC_DESCRIPTION},
         'servers': [{'url': 'http://127.0.0.1:5000', 'description': 'local'}],
         'tags': tags,
-        'paths': paths,
-        'components': {'schemas': schemas, 'securitySchemes': security},
+        'paths': dict(sorted(paths.items())),
+        'components': {'schemas': dict(sorted(schemas.items())),
+                       'securitySchemes': security},
     }
     if security:
         spec['security'] = [{name: []} for name in security]
