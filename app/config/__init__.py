@@ -34,6 +34,8 @@ def _load_py_file(filename: str, *, optional: bool = False):
 
 
 _load_py_file('default.py')
-if os.environ.get('TESTING') == '1' or os.environ.get('PYTEST_CURRENT_TEST'):
+if (os.environ.get('TESTING') == '1'
+        or os.environ.get('PYTEST_CURRENT_TEST')
+        or config.get('DEBUG')):
     _load_py_file('testing.py', optional=True)
 _load_py_file('environment.py', optional=True)
