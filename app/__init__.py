@@ -51,8 +51,24 @@ def _init_db(flask_app: Flask):
     from .models import db
     db.init_app(flask_app)
 
+    from alembic.runtime.migration import MigrationContext
+    from sqlalchemy import Column
+    from sqlalchemy.sql.sqltypes import SchemaType, Enum as SQLEnum
+
+    def type_comparer(context: MigrationContext,
+                      inspected_column: Column,
+                      metadata_column: Column,
+                      inspected_type: SchemaType,
+                      metadata_type: SchemaType) -> Optional[bool]:
+
+        _ = context, inspected_column, metadata_column
+        if not (isinstance(inspected_type, SQLEnum)
+                and isinstance(metadata_type, SQLEnum)):
+            return None
+        return set(inspected_type.enums) != set(metadata_type.enums)
+
     global migrate
-    migrate = Migrate(flask_app, db)
+    migrate = Migrate(flask_app, db, compare_type=type_comparer)
 
 
 def _init_apis(flask_app: Flask):
