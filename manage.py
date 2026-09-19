@@ -15,8 +15,8 @@ def cli():
 @click.command('init-data')
 def init_data_command():
     """Seed the database with initial data."""
-    from app.business import init_data
     from app import create_app
+    from app.business import init_data
     from app.models import db
 
     app = create_app()

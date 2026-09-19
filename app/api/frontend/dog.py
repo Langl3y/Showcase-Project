@@ -1,10 +1,15 @@
-from webargs import fields
 from flask import g
+from webargs import fields
 
-from app.exceptions import (BreedDoesNotExist, DogImageDoesNotExist,
-                            FileDoesNotExist, ImageFormatError)
-from app.models import Breed, DogImage, File, BreedImage, db
-from ..common import Namespace, Resource, respond_with_code, require_login, extra_fields
+from app.exceptions import (
+    BreedDoesNotExist,
+    DogImageDoesNotExist,
+    FileDoesNotExist,
+    ImageFormatError,
+)
+from app.models import Breed, BreedImage, DogImage, File, db
+
+from ..common import Namespace, Resource, extra_fields, require_login, respond_with_code
 
 ns = Namespace('Dog')
 

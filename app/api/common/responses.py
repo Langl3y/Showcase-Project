@@ -2,7 +2,6 @@ from typing import Any
 
 from app.utils.chicken_ribs import NamedObject
 
-
 _EMPTY = NamedObject('Empty')
 
 

@@ -1,6 +1,5 @@
-from flask import g
 
-from app.api.common import (Namespace, respond_with_code, Resource)
+from app.api.common import Namespace, Resource, respond_with_code
 
 ns = Namespace('System')
 

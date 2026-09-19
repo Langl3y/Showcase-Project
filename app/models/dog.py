@@ -1,6 +1,6 @@
 from enum import Enum
 
-from .base import db, ModelBase
+from .base import ModelBase, db
 
 
 class Species(ModelBase):

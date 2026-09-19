@@ -1,8 +1,10 @@
 from enum import Enum
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .base import db, ModelBase
 from app.utils.date_ import current_timestamp
+
+from .base import ModelBase, db
 
 
 class User(ModelBase):

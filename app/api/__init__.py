@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import json
 from importlib import import_module
 from pkgutil import walk_packages
 
-from flask import Flask, Blueprint, make_response, request, g
+from flask import Blueprint, Flask, make_response, request
 from flask_restx import Namespace
 from pygtrie import StringTrie
 
-from app.config import config
 from app.api.common import Api, JsonEncoder
-from . import frontend, admin
-import json
+from app.config import config
+
+from . import admin, frontend
 
 _before_request = StringTrie(separator='/')
 

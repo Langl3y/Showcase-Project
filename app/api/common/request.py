@@ -1,12 +1,10 @@
 from enum import Enum
-from typing import Callable, Optional
+from typing import Optional
 
-from flask import request, g
+from flask import g, request
 
-from app.exceptions import (
-    InvalidPlatform, InvalidArgument, UnAuthorization
-)
 from app.common import LanguageEnum
+from app.exceptions import InvalidPlatform
 from app.models import User
 from app.utils.chicken_ribs import NamedObject
 from app.utils.date_ import now
@@ -39,8 +37,8 @@ class RequestPlatform(Enum):
         if platform:
             try:
                 platform = RequestPlatform(platform)
-            except ValueError:
-                raise InvalidPlatform(platform)
+            except ValueError as exc:
+                raise InvalidPlatform(platform) from exc
             if platform is cls.UNKNOWN:
                 raise InvalidPlatform(platform)
         else:

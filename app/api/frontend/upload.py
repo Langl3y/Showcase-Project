@@ -1,13 +1,21 @@
 import imghdr
 import os
 
-from flask import request, g
+from flask import g, request
 from werkzeug.utils import secure_filename
+
 from app.api.common import Namespace, Resource
-from ..common.decorators import respond_with_code, require_login
-from ...exceptions import InvalidArgument, ImageFormatError, FileTooBig, ServiceUnavailable, FileNameTooLong
-from ...models import File, db
 from app.utils import AWSBucket, new_file_key
+
+from ...exceptions import (
+    FileNameTooLong,
+    FileTooBig,
+    ImageFormatError,
+    InvalidArgument,
+    ServiceUnavailable,
+)
+from ...models import File, db
+from ..common.decorators import require_login, respond_with_code
 
 ns = Namespace('Upload')
 

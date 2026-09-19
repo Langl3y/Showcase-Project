@@ -1,16 +1,23 @@
 from flask import g
 from webargs import fields
 
-from app.models import db, User
-from app.api.common import (Namespace, respond_with_code, Resource, require_login,
-                           get_request_ip, get_request_user_agent, get_request_platform,
-                           get_request_language, extra_fields, ex_fields)
-from app.exceptions import (InvalidArgument, InvalidUsernameOrPassword,
-                           UnAuthorization, EmailAlreadyExists, UserDoesNotExist)
+from app.api.common import (
+    Namespace,
+    Resource,
+    require_login,
+    respond_with_code,
+)
+from app.caches import AuthCache
+from app.common import LOGIN_STATE_DEFAULT_TTL, LOGIN_TOKEN_SIZE
+from app.exceptions import (
+    EmailAlreadyExists,
+    InvalidUsernameOrPassword,
+    UnAuthorization,
+    UserDoesNotExist,
+)
+from app.models import User, db
 from app.utils.date_ import current_timestamp
 from app.utils.rand import new_hex_token
-from app.common import LOGIN_TOKEN_SIZE, LOGIN_STATE_DEFAULT_TTL
-from app.caches import AuthCache
 from app.utils.text import hide_text_default
 
 ns = Namespace('User')

@@ -1,10 +1,9 @@
-from typing import Optional
 from enum import Enum
+from typing import Optional
 
-from .base import db, ModelBase
-from ..utils import MinioDefaultBucket
 from ..config import config
-
+from ..utils import MinioDefaultBucket
+from .base import ModelBase, db
 
 _default_bucket_name = config['MINIO_FILE']['bucket_name']
 

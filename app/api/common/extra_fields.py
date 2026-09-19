@@ -6,7 +6,6 @@ from marshmallow import fields as mm_fields
 from ...exceptions import InvalidArgument
 from ...utils import list_enum_names, list_enum_values
 
-
 PageField = mm_fields.Integer(
     required=False,
     missing=1,
@@ -65,9 +64,10 @@ class EnumField(mm_fields.String):
             if self.enum_by_value:
                 try:
                     value = enum_cls(value)
-                except ValueError:
+                except ValueError as exc:
                     raise InvalidArgument(
-                        message=f'{value!r} is not a valid {enum_cls} value')
+                        message=f'{value!r} is not a valid {enum_cls} value'
+                    ) from exc
             else:
                 if not isinstance((v := getattr(enum_cls, value, None)), enum_cls):
                     raise InvalidArgument(

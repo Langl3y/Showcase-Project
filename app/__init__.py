@@ -1,4 +1,4 @@
-from logging import getLogger, Logger
+from logging import Logger, getLogger
 from typing import Optional
 
 from flask import Flask
@@ -53,7 +53,8 @@ def _init_db(flask_app: Flask):
 
     from alembic.runtime.migration import MigrationContext
     from sqlalchemy import Column
-    from sqlalchemy.sql.sqltypes import SchemaType, Enum as SQLEnum
+    from sqlalchemy.sql.sqltypes import Enum as SQLEnum
+    from sqlalchemy.sql.sqltypes import SchemaType
 
     def type_comparer(context: MigrationContext,
                       inspected_column: Column,

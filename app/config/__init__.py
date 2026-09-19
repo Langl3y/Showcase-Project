@@ -1,8 +1,8 @@
-from pathlib import Path
-from typing import Dict, Any
 import os
-from .common import ConfigDict
+from pathlib import Path
+from typing import Any, Dict
 
+from .common import ConfigDict
 
 root_path: Path = Path(__file__).parent
 config: Dict[str, Any] = {}

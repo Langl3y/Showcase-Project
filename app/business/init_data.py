@@ -2,7 +2,7 @@ import requests
 from werkzeug.security import generate_password_hash
 
 from app.config import config
-from app.models import db, User, Breed
+from app.models import Breed, User, db
 
 
 def init_data():

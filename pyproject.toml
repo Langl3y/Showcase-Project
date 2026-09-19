@@ -1,0 +1,44 @@
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = ["venv", "migrations/versions", "app/config/testing.py",
+           "app/config/environment.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "C4"]
+ignore = [
+    "E501",
+    "B008",
+    "C408",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"app/exceptions/__init__.py" = ["F401", "F403"]
+"app/models/__init__.py" = ["F401", "F403"]
+"app/utils/__init__.py" = ["F401"]
+"app/api/common/__init__.py" = ["F401"]
+"app/models/user.py" = ["F403", "F405"]
+"tests/*" = ["F401"]
+"tests/conftest.py" = ["E402", "I001"]
+"app/config/testing_example.py" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::sqlalchemy.exc.LegacyAPIWarning",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = ["app/config/testing*.py", "app/config/environment.py", "app/log/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError"]

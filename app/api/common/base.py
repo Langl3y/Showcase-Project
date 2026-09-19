@@ -1,29 +1,36 @@
 import json
-import marshmallow as ma
-
 from collections.abc import Mapping
-from datetime import datetime, date
+from datetime import date, datetime
 from decimal import Decimal
 from enum import Enum, EnumMeta
+from json import JSONEncoder as _JSONEncoder
 from traceback import format_exc
 from typing import Dict, Type, Union
 
-from flask import request, Response, current_app
-from flask_restx import (Api as _Api, Resource as _Resource,
-                         Namespace as _Namespace, fields as restx_fields)
-from flask_restx.utils import unpack
+import marshmallow as ma
 from dateutil.tz import UTC
-from json import JSONEncoder as _JSONEncoder
-from webargs.flaskparser import use_kwargs, parser
+from flask import Response, current_app, request
+from flask_restx import Api as _Api
+from flask_restx import Namespace as _Namespace
+from flask_restx import Resource as _Resource
+from flask_restx import fields as restx_fields
+from flask_restx.utils import unpack
 from marshmallow import fields as mm_fields
 from marshmallow.utils import EXCLUDE
+from sqlalchemy.exc import DataError, IntegrityError
+from webargs.flaskparser import parser, use_kwargs
 from werkzeug.exceptions import HTTPException
 
-from sqlalchemy.exc import DataError, IntegrityError
-from app.exceptions import ErrorWithResponseCode, InvalidArgument, \
-    ServiceUnavailable, AmountLimitExceeded, AlreadyExists
+from app.exceptions import (
+    AlreadyExists,
+    AmountLimitExceeded,
+    ErrorWithResponseCode,
+    InvalidArgument,
+    ServiceUnavailable,
+)
 from app.models import db, row_to_dict
 from app.utils.text import remove_suffix
+
 from .responses import failure
 
 
@@ -167,7 +174,7 @@ class Namespace(_Namespace):
                 location = 'json'
 
             else:
-                for key, field in fields.items():
+                for _key, field in fields.items():
                     if field.required:
                         continue
                     if field.default is mm_fields.missing_:
