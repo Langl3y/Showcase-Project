@@ -55,15 +55,14 @@ def init_breeds():
         headers['x-api-key'] = api_key
 
     response = requests.get(endpoint, headers=headers, timeout=timeout)
-    response.raise_for_status()
-    payloads = response.json()
+    breed_data = response.json()
 
-    for item in payloads:
-        raw_id = item.get('id')
-        if raw_id is None:
+    for item in breed_data:
+        from_api_id = item.get('id')
+        if from_api_id is None:
             continue
 
-        breed_id = int(raw_id)
+        breed_id = int(from_api_id)
         if Breed.query.get(breed_id) is not None:
             continue
 
