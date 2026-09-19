@@ -1,6 +1,5 @@
 import pytest
 
-
 BREED_PAYLOADS = [
     {
         'id': 1,
@@ -191,7 +190,7 @@ def test_detail_missing_breed(client, auth, breeds):
 # --- DogImage (user gallery): fixtures + tests ------------------------------
 
 DOG_IMAGE_CREATE_URL = '/frontend/dog/image'
-DOG_IMAGES_LIST_URL = '/frontend/dog/images'
+DOG_IMAGES_LIST_URL = '/frontend/dog/recent/images'
 
 
 def _make_file(app, user_id, *, mime=None, key='tests/dog.jpg', name='dog.jpg',
@@ -469,4 +468,3 @@ def test_delete_dog_image_missing_raises(client, auth):
 
     resp = client.delete(f'{DOG_IMAGE_CREATE_URL}/99999999', headers=auth)
     assert resp.json['code'] == DogImageDoesNotExist.response_code
-
