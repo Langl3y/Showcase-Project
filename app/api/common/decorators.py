@@ -2,13 +2,14 @@ from functools import wraps
 from inspect import isclass
 from typing import Callable
 
-from flask import current_app, g, request, Response
+from flask import Response, current_app, g, request
 from flask.views import http_method_funcs as _http_method_funcs
 
-from app.models import User
-from app.exceptions import UnAuthorization
 from app.caches import AuthCache
-from .responses import success, failure
+from app.exceptions import UnAuthorization
+from app.models import User
+
+from .responses import failure, success
 
 
 def _decorate_class(dec: Callable, cls):

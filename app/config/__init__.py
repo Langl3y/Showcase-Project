@@ -1,7 +1,8 @@
+import os
 from pathlib import Path
-from typing import Dict, Any
-from .common import ConfigDict
+from typing import Any, Dict
 
+from .common import ConfigDict
 
 root_path: Path = Path(__file__).parent
 config: Dict[str, Any] = {}
@@ -33,5 +34,8 @@ def _load_py_file(filename: str, *, optional: bool = False):
 
 
 _load_py_file('default.py')
-_load_py_file('testing.py', optional=True)
+if (os.environ.get('TESTING') == '1'
+        or os.environ.get('PYTEST_CURRENT_TEST')
+        or config.get('DEBUG')):
+    _load_py_file('testing.py', optional=True)
 _load_py_file('environment.py', optional=True)

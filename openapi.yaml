@@ -1,0 +1,330 @@
+openapi: 3.0.3
+info:
+  title: Hieu Ho Python Assessment API
+  version: 1.0.0
+  description: 'Every response is wrapped in {code, data, message}. `code` is 0 on success and the HTTP
+    status stays 200 for handled errors, so clients must branch on `code`, not on the status.
+
+
+    Error codes are allocated per domain: 100-199 user, 200-299 dog, 300-399 file, 2 invalid argument.'
+servers:
+- url: http://127.0.0.1:5000
+  description: local
+tags:
+- name: Dog
+- name: System
+- name: Upload
+- name: User
+- name: AdminUser
+paths:
+  /admin/user/users:
+    get:
+      operationId: get_admin_user_list_resource
+      tags:
+      - AdminUser
+      parameters:
+      - in: query
+        description: Page number, starting from 1, default=1
+        required: false
+        name: page
+        schema:
+          type: integer
+      - in: query
+        description: Items per page, default=20
+        required: false
+        name: limit
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+  /admin/user/users/{user_id}:
+    get:
+      operationId: get_admin_user_detail_resource
+      tags:
+      - AdminUser
+      responses:
+        '200':
+          description: Success
+    put:
+      operationId: put_admin_user_detail_resource
+      tags:
+      - AdminUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminUserAdminUserDetailPutRequest'
+      responses:
+        '200':
+          description: Success
+    parameters:
+    - name: user_id
+      in: path
+      required: true
+      schema:
+        type: integer
+  /frontend/dog/breed:
+    get:
+      operationId: get_list_breed
+      tags:
+      - Dog
+      parameters:
+      - in: query
+        description: default=1
+        required: false
+        name: page
+        schema:
+          type: integer
+      - in: query
+        description: default=50
+        required: false
+        name: limit
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+  /frontend/dog/breed/image:
+    post:
+      operationId: post_breed_image_associate
+      tags:
+      - Dog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogBreedImageAssociatePostRequest'
+      responses:
+        '200':
+          description: Success
+  /frontend/dog/breed/{_id}:
+    get:
+      operationId: get_breed_detail
+      tags:
+      - Dog
+      parameters:
+      - in: query
+        description: 'choices=[''Metric'', ''Imperial''], default=<MeasurementEnum.Metric: ''Metric''>'
+        required: false
+        name: measurement
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+    parameters:
+    - name: _id
+      in: path
+      required: true
+      schema:
+        type: integer
+  /frontend/dog/image:
+    post:
+      operationId: post_dog_image_create
+      tags:
+      - Dog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogDogImageCreatePostRequest'
+      responses:
+        '200':
+          description: Success
+  /frontend/dog/image/{_id}:
+    delete:
+      operationId: delete_dog_image_delete
+      tags:
+      - Dog
+      responses:
+        '200':
+          description: Success
+    parameters:
+    - name: _id
+      in: path
+      required: true
+      schema:
+        type: integer
+  /frontend/dog/recent/images:
+    get:
+      operationId: get_list_dog_image
+      tags:
+      - Dog
+      parameters:
+      - in: query
+        description: default=1
+        required: false
+        name: page
+        schema:
+          type: integer
+      - in: query
+        description: default=50
+        required: false
+        name: limit
+        schema:
+          type: integer
+      - in: query
+        description: default=None
+        required: false
+        name: breed_id
+        schema:
+          type: integer
+      - in: query
+        description: default=None
+        required: false
+        name: user_id
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+  /frontend/system/health:
+    get:
+      operationId: get_health_resource
+      tags:
+      - System
+      responses:
+        '200':
+          description: Success
+  /frontend/system/info:
+    get:
+      operationId: get_info_resource
+      tags:
+      - System
+      responses:
+        '200':
+          description: Success
+  /frontend/upload/image:
+    post:
+      operationId: post_image_upload_resource
+      tags:
+      - Upload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                img:
+                  type: string
+                  format: binary
+                  description: png/jpg image, max 10MB
+      responses:
+        '200':
+          description: Success
+  /frontend/user/login:
+    post:
+      operationId: post_login_resource
+      tags:
+      - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginPostRequest'
+      responses:
+        '200':
+          description: Success
+  /frontend/user/logout:
+    post:
+      operationId: post_logout_resource
+      tags:
+      - User
+      responses:
+        '200':
+          description: Success
+  /frontend/user/me:
+    get:
+      operationId: get_me_resource
+      tags:
+      - User
+      responses:
+        '200':
+          description: Success
+  /frontend/user/register:
+    post:
+      operationId: post_register_resource
+      tags:
+      - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterPostRequest'
+      responses:
+        '200':
+          description: Success
+components:
+  schemas:
+    AdminUserAdminUserDetailPutRequest:
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          example: Frozen
+      type: object
+    DogBreedImageAssociatePostRequest:
+      required:
+      - breed_id
+      - file_id
+      properties:
+        file_id:
+          type: integer
+        breed_id:
+          type: integer
+      type: object
+    DogDogImageCreatePostRequest:
+      required:
+      - breed_id
+      - file_id
+      properties:
+        file_id:
+          type: integer
+        breed_id:
+          type: integer
+        title:
+          type: string
+          example: ''
+      type: object
+    UserLoginPostRequest:
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: StrongPass123!
+      type: object
+    UserRegisterPostRequest:
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: StrongPass123!
+        username:
+          type: string
+          example: john_doe
+      type: object
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      in: header
+      name: AUTHORIZATION
+security:
+- Authorization: []

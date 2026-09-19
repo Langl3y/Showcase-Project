@@ -1,15 +1,11 @@
-from datetime import datetime
 from enum import Enum
-from typing import Type, TypeVar
 from logging import getLogger
+from typing import Type, TypeVar
 
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
-from sqlalchemy.orm import sessionmaker, scoped_session, Session
-from dateutil.tz import UTC
+from sqlalchemy.orm import Session, scoped_session, sessionmaker
 
-from app import config
 from app.utils.date_ import current_timestamp
-
 
 _logger = getLogger(__name__)
 

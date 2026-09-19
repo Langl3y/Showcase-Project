@@ -17,3 +17,12 @@ docs/
 # Local config
 app/config/testing.py
 app/config/environment.py
+
+# Local databases
+*.db
+*.sqlite3
+
+# Tooling caches
+.coverage
+.ruff_cache/
+.pytest_cache/

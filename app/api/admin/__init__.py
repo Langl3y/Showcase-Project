@@ -2,7 +2,6 @@ from flask import g
 
 from app.api.common.request import get_request_language
 
-
 url_prefix = '/admin'
 
 

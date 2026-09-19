@@ -1,9 +1,8 @@
 from webargs import fields
 
-from app.api.common import (Namespace, respond_with_code, Resource,
-                           ex_fields)
-from app.models import db, User
+from app.api.common import Namespace, Resource, ex_fields, respond_with_code
 from app.exceptions import UserDoesNotExist
+from app.models import User, db
 from app.utils.text import hide_text_default
 
 ns = Namespace('AdminUser')
@@ -36,10 +35,11 @@ class AdminUserListResource(Resource):
 
         return {
             "items": items,
+            "page": pagination.page,
+            "limit": pagination.per_page,
             "total": pagination.total,
-            "page": page,
-            "limit": limit,
             "pages": pagination.pages,
+            "has_next": pagination.has_next,
         }
 
 
@@ -77,9 +77,9 @@ class AdminUserDetailResource(Resource):
 
         try:
             user.status = User.StatusEnum(status)
-        except ValueError:
+        except ValueError as exc:
             from app.exceptions import InvalidArgument
-            raise InvalidArgument(f'Invalid status: {status}')
+            raise InvalidArgument(f'Invalid status: {status}') from exc
 
         db.session.commit()
 
