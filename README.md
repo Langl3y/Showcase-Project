@@ -1,4 +1,4 @@
-# hieu-ho-python-assessment
+# Flask Showcase Project
 
 ## Architecture
 
